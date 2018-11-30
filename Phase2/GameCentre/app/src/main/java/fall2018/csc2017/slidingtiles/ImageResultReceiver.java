@@ -41,6 +41,7 @@ public class ImageResultReceiver extends ResultReceiver {
      * Untouched, yet loaded bitmap awaiting for splitting
      */
     private Bitmap unprocessedBitmap;
+    private boolean recInit = false;
 
     /**
      * The constructor for this ImageResultReceiver
@@ -97,39 +98,21 @@ public class ImageResultReceiver extends ResultReceiver {
         return unprocessedBitmap;
     }
     /**
-     * Returns the array list of bitmaps
-     * @return the array list of bitmaps
-     */
-    public ArrayList<Bitmap> getBitmapArrayList(){
-        return bmList;
-    }
-    /**
      * Whether or not this receiver has received contents
      * @return boolean whether or not this receiver has received contents
      */
     public boolean contentReceived(){
         return (recIm || recImArr) ;
     }
+    public boolean resultReceiverInitialized(){
+        return recInit;
+    };
     /**
      * Returns whether or not the sender has received invalid image png
      * @return the boolean of whether or not the sender has received invalid image png
      */
     public boolean invalidImageLink(){
         return recImInvalid;
-    }
-    /**
-     * Returns the rows of the images designed to use for
-     * @return number of rows
-     */
-    public int getRow(){
-        return row;
-    }
-    /**
-     * Returns the columns of the images designed to use for
-     * @return number of columns
-     */
-    public int getCol(){
-        return col;
     }
 
     /**
@@ -153,9 +136,11 @@ public class ImageResultReceiver extends ResultReceiver {
                         bmList = getBitmapList(bmArr);
                         recImArr = true;
                     }
+                    recInit = true;
                     break;
                 case 2:
                     recImInvalid = true;
+                    recInit = true;
                     break;
                 case 3:
                     Bitmap bm1 = resultData.getParcelable("image");
@@ -163,10 +148,12 @@ public class ImageResultReceiver extends ResultReceiver {
                     unprocessedBitmap = bm1;
                     recIm = true;
                     recImArr = false;
+                    recInit = true;
                     break;
                 default:
                     recImArr = false;
                     recIm = false;
+                    recInit = true;
                     break;
             }
         }
