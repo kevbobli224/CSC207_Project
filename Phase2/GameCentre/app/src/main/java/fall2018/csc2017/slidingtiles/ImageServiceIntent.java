@@ -39,9 +39,6 @@ public class ImageServiceIntent extends IntentService {
     /**
      * The required constructors for assigning worker's name.
      */
-    public ImageServiceIntent(String name) {
-        super(name);
-    }
     public ImageServiceIntent() {
         super("DisplayNotification");
     }
@@ -71,18 +68,9 @@ public class ImageServiceIntent extends IntentService {
             if(bitmap == null){
                 rr.send(2, null);
             }
-            else if(rows == 0 && columns == 0) {
+            else {
                 bundle.putParcelable("image", bitmap.getBitmap());
                 rr.send(3, bundle);
-            } else {
-                bundle.putParcelable("image", bitmap.getBitmap());
-                bundle.putSerializable("imagearray", bitmapSplitter(bitmap.getBitmap(), rows, columns));
-                bundle.putIntegerArrayList("size", new ArrayList<Integer>() {{
-                    add(rows);
-                    add(columns);
-                }});
-                intent.putExtra("splits", 16);
-                rr.send(1, bundle);
             }
         } catch (MalformedURLException e) {
             rr.send(2,null);
