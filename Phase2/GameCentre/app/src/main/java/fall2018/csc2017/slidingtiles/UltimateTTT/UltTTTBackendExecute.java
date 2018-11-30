@@ -2,8 +2,6 @@ package fall2018.csc2017.slidingtiles.UltimateTTT;
 
 //Adapted from: https://github.com/Prakash2403/UltimateTicTacToe/blob/master/app/src/main/java/com/example/prakash/ultimatetictactoe/backend/Backend.java
 
-import android.util.Log;
-
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -52,14 +50,13 @@ public class UltTTTBackendExecute {
         initializer.resetCells = new String();
         initializer.currentActiveBlock = getBlockNumber(cell_number);
         initializer.buttonPressed = getButtonPressed(cell_number);
-        currState = gamestates.toJson();
         if (initializer.buttonPressed.equals("Reset")) {
             executeReset();
             initializer.buttonPressed = "Reset";
+            currState = gamestates.toJson();
             gamestates.updateHistory(currState);
             return currState;
         } else if (initializer.buttonPressed.equals("Undo")) {
-            gamestates.updateHistory(currState);
             executeUndo();
             initializer.buttonPressed = "Undo";
             return gamestates.toJson();
@@ -123,15 +120,9 @@ public class UltTTTBackendExecute {
             initializer.initialize();
             return;
         }
-        previous_move = initializer.history.pop();
+
         initializer.isP1Turn = !initializer.isP1Turn;
-        previous_move = initializer.history.empty() ? null : initializer.history.peek();
-        if(previous_move == null) {
-            initializer.initialize();
-            initializer.currentActiveBlock = Integer.MAX_VALUE;
-            initializer.nextActiveBlock = Integer.MAX_VALUE;
-            return;
-        }
+        previous_move = initializer.history.peek();
         current_values = UltimateTTTInfoManager.parseJson(current_move);
         previous_values = UltimateTTTInfoManager.parseJson(previous_move);
         initializer.nextActiveBlock = Integer.parseInt((String) previous_values.get("NextActiveBlock"));

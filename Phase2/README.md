@@ -54,7 +54,8 @@ bottom right with circles and crosses signs), and Obstacle Dodger game
       - Play until solved, the scores are calculated from a maximum, bonus
         points if you win faster
    2. If you chose UltimateTicTacToe game:
-      - Pick a saved game to play, or start a new game.
+      - It starts a new game, or a saved game if you played before and exited
+        without finishing the game. The game auto saved when a move is made.
       - Two players needed. Each player gets to click one cell and next is
         the other player's turn.
       - Only cells in blocks with color edges(Red or Green) is active to be
@@ -76,6 +77,9 @@ bottom right with circles and crosses signs), and Obstacle Dodger game
 you can see scores of all users in the Game Centre, or only look at your
 own.
 7. Start a new game or go back to the game selection.
+8. There is a pink scoreboard button at the bottom of game selection screen,
+which is the general score board shows the scores for all three games. Slide
+the screen left and right to switch scoreboard for each game.
 
 ## Functionalities of GameCentre
 1. Login and register activity. Users can register an account to save
