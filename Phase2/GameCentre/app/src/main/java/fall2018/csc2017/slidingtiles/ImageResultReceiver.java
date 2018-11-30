@@ -125,29 +125,15 @@ public class ImageResultReceiver extends ResultReceiver {
         if (mReceiver != null) {
             switch(resultCode){
                 case 1:
-                    row = resultData.getIntegerArrayList("size").get(0);
-                    col = resultData.getIntegerArrayList("size").get(0);
-                    Bitmap bm = resultData.getParcelable("image");
-                    imageView.setImageBitmap(bm);
-                    recIm = true;
-                    Bitmap[][] bArr = (Bitmap[][]) resultData.getSerializable("imagearray");
-                    if(bArr != null) {
-                        bmArr = bArr;
-                        bmList = getBitmapList(bmArr);
-                        recImArr = true;
-                    }
-                    recInit = true;
-                    break;
-                case 2:
-                    recImInvalid = true;
-                    recInit = true;
-                    break;
-                case 3:
                     Bitmap bm1 = resultData.getParcelable("image");
                     imageView.setImageBitmap(bm1);
                     unprocessedBitmap = bm1;
                     recIm = true;
                     recImArr = false;
+                    recInit = true;
+                    break;
+                case 2:
+                    recImInvalid = true;
                     recInit = true;
                     break;
                 default:
