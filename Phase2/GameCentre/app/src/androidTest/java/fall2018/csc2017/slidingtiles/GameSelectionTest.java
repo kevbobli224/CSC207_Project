@@ -9,7 +9,6 @@ import android.graphics.drawable.VectorDrawable;
 import android.os.IBinder;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.Root;
-import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.GeneralLocation;
 import android.support.test.espresso.action.GeneralSwipeAction;
 import android.support.test.espresso.action.Press;
@@ -18,8 +17,6 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.filters.SmallTest;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
@@ -46,11 +43,9 @@ import fall2018.csc2017.slidingtiles.UltimateTTT.UltimateTTTGameActivity;
 import static android.content.Context.MODE_PRIVATE;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.doubleClick;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -60,15 +55,11 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static fall2018.csc2017.slidingtiles.UtilityManager.ACCOUNTS_FILENAME;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
@@ -180,17 +171,20 @@ public class GameSelectionTest {
         onView(allOf(withId(R.id.fragment_layout), isDisplayed())).check(matches(isDisplayed()));
         onView(allOf(withText("Sliding Tiles"), instanceOf(TextView.class)))
                 .check(matches(isDisplayed()));
+        onView(withId(R.id.iv_bg)).perform(click());
         onView(allOf(withId(R.id.fragment_layout), isDisplayed()))
                 .perform(new GeneralSwipeAction(Swipe.FAST, GeneralLocation.BOTTOM_RIGHT,
                         GeneralLocation.BOTTOM_LEFT, Press.FINGER));
         Thread.sleep(1000);
         onView(allOf(withText("Obstacle Dodger"), instanceOf(TextView.class)))
                 .check(matches(isDisplayed()));
+        onView(withId(R.id.iv_bg)).perform(click());
         onView(allOf(withId(R.id.fragment_layout), isDisplayed()))
                 .perform(new GeneralSwipeAction(Swipe.FAST, GeneralLocation.BOTTOM_RIGHT,
                         GeneralLocation.BOTTOM_LEFT, Press.FINGER));
         onView(allOf(withText("Ultimate TTT"), instanceOf(TextView.class)))
                 .check(matches(isDisplayed()));
+        onView(withId(R.id.iv_bg)).perform(click());
         Espresso.pressBack();
         onView(withId(R.id.button_gameselect3)).perform(click());
         intended(hasComponent(ObGameActivity.class.getName()),times(2));
@@ -416,11 +410,19 @@ public class GameSelectionTest {
         onView(allOf(withId(android.R.id.button1))).perform(click());
         onView(withId(R.id.button_newgame)).check(matches(isDisplayed())).perform(click());
         onView(withText("Other...")).inRoot(isPlatformPopup()).check(matches(isDisplayed())).perform(click());
+        //TEST IMAGE
+        onView(withId(R.id.cb_useImage)).perform(click());
         onView(withId(R.id.text_row)).perform(replaceText("5"));
         onView(withId(R.id.text_column)).perform(replaceText("5"));
-        //TEST IMAGE
+        onView(withId(R.id.button_loadImage)).perform(click());
+        onView(allOf(withText(R.string.d_toast_no_image)))
+                .inRoot(toastMatch())
+                .check(matches(isDisplayed()));
+        onView(withId(R.id.button_loadImage)).perform(click());
+        onView(allOf(withText(R.string.d_toast_invalid_url)))
+                .inRoot(toastMatch())
+                .check(matches(isDisplayed()));
         onView(withId(R.id.et_Url)).perform(replaceText("https://cdn.zmescience.com/wp-content/uploads/2018/11/grape.w700.h467.jpg"));
-        onView(withId(R.id.cb_useImage)).perform(click());
         onView(withId(R.id.button_loadImage)).perform(click());
         Thread.sleep(2000);
         onView(withId(R.id.button_confirm_difficulty)).perform(click());
@@ -467,24 +469,6 @@ public class GameSelectionTest {
             @Override
             public void describeTo(Description description) {
                 description.appendText("toast matching");
-            }
-        };
-    }
-    private static Matcher<View> getAdapterItemAt(
-            final Matcher<View> parentMatcher, final int position) {
-
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
     }
