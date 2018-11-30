@@ -9,6 +9,7 @@ import android.graphics.drawable.VectorDrawable;
 import android.os.IBinder;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.Root;
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.GeneralLocation;
 import android.support.test.espresso.action.GeneralSwipeAction;
 import android.support.test.espresso.action.Press;
@@ -17,6 +18,8 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.filters.SmallTest;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,9 +46,13 @@ import fall2018.csc2017.slidingtiles.UltimateTTT.UltimateTTTGameActivity;
 import static android.content.Context.MODE_PRIVATE;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.doubleClick;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.swipeDown;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.times;
@@ -53,11 +60,15 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static fall2018.csc2017.slidingtiles.UtilityManager.ACCOUNTS_FILENAME;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
@@ -174,6 +185,11 @@ public class GameSelectionTest {
                         GeneralLocation.BOTTOM_LEFT, Press.FINGER));
         Thread.sleep(1000);
         onView(allOf(withText("Obstacle Dodger"), instanceOf(TextView.class)))
+                .check(matches(isDisplayed()));
+        onView(allOf(withId(R.id.fragment_layout), isDisplayed()))
+                .perform(new GeneralSwipeAction(Swipe.FAST, GeneralLocation.BOTTOM_RIGHT,
+                        GeneralLocation.BOTTOM_LEFT, Press.FINGER));
+        onView(allOf(withText("Ultimate TTT"), instanceOf(TextView.class)))
                 .check(matches(isDisplayed()));
         Espresso.pressBack();
         onView(withId(R.id.button_gameselect3)).perform(click());
@@ -417,7 +433,22 @@ public class GameSelectionTest {
         onView(allOf(withId(android.R.id.button1))).perform(click());
         GameActivity.IMAGE_SET = null;
         testRule.finishActivity();
-
+    }
+    @Test
+    public void test7_testScrollLoader(){
+        Intent intent = new Intent();
+        intent.putExtra("currentUser", "123");
+        testRule.launchActivity(intent);
+        onView(withId(R.id.button_gameselect1)).perform(click());
+        onView(withId(R.id.button_slidingreset)).check(matches(isDisplayed())).perform(click());
+        onView(withText("Delete all games?")).inRoot(isDialog()).check(matches(isDisplayed()));
+        onView(allOf(withId(android.R.id.button1))).perform(click());
+        for(int i = 0; i < 6; i++) {
+            onView(withId(R.id.button_newgame)).check(matches(isDisplayed())).perform(click());
+            onView(withText("4x4")).inRoot(isPlatformPopup()).check(matches(isDisplayed())).perform(click());
+        }
+        onView(withId(R.id.scrollable_loadablegames)).perform(swipeUp());
+        onView(withId(R.id.scrollable_loadablegames)).perform(swipeDown());
     }
     private static TypeSafeMatcher<Root> toastMatch(){
         return new TypeSafeMatcher<Root>() {
@@ -436,6 +467,24 @@ public class GameSelectionTest {
             @Override
             public void describeTo(Description description) {
                 description.appendText("toast matching");
+            }
+        };
+    }
+    private static Matcher<View> getAdapterItemAt(
+            final Matcher<View> parentMatcher, final int position) {
+
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Child at position " + position + " in parent ");
+                parentMatcher.describeTo(description);
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                ViewParent parent = view.getParent();
+                return parent instanceof ViewGroup && parentMatcher.matches(parent)
+                        && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
     }
