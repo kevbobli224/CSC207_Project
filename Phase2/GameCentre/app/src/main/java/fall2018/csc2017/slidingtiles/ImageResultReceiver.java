@@ -139,11 +139,6 @@ public class ImageResultReceiver extends ResultReceiver {
                     recImInvalid = true;
                     recInit = true;
                     break;
-                default:
-                    recImArr = false;
-                    recIm = false;
-                    recInit = true;
-                    break;
             }
         }
     }
