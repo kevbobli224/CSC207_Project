@@ -322,7 +322,9 @@ public class SlidingTileTest {
             onView(isRoot()).perform(delayFor(R.id.text_undos, 1000));
             intended(hasComponent(ScoreBoard.class.getName()));
             onData(allOf(instanceOf(String.class), startsWith("123"))).atPosition(0).check(matches(withText(startsWith("123:      9"))));
-
+            onView(withId(R.id.switchscoreboardview)).perform(click());
+            onView(withId(R.id.switchscoreboardview)).perform(click());
+            onView(withId(R.id.button_new_game)).perform(click());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
