@@ -41,6 +41,9 @@ public class ImageResultReceiver extends ResultReceiver {
      * Untouched, yet loaded bitmap awaiting for splitting
      */
     private Bitmap unprocessedBitmap;
+    /**
+     * Boolean of whether the receiver has received any sort of information.
+     */
     private boolean recInit = false;
 
     /**
