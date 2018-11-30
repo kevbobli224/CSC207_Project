@@ -14,14 +14,6 @@ public class CustomScrollView extends ListView {
     private final Drawable background =
             ResourcesCompat.getDrawable(getResources(), R.drawable.bg_simplebg, null);
 
-    /**
-     * Constructor for the scrollview given context used in
-     * @param context the context of the scrollview
-     */
-    public CustomScrollView(Context context){
-        super(context);
-        init(context);
-    }
 
     /**
      * Constructor for the scrollview given context used in
@@ -30,29 +22,6 @@ public class CustomScrollView extends ListView {
      */
     public CustomScrollView(Context context, AttributeSet attrs){
         super(context, attrs);
-        init(context);
-    }
-
-    /**
-     * Constructor for the scrollview given context used in
-     * @param context the context of the scrollview
-     * @param attrs attributes of the scrollview
-     * @param defaultAtt num defaultAtt
-     */
-    public CustomScrollView(Context context, AttributeSet attrs, int defaultAtt){
-        super(context, attrs, defaultAtt);
-        init(context);
-    }
-
-    /**
-     * Constructor for the scrollview given context used in
-     * @param context the context of the scrollview
-     * @param attrs attributes of the scrollview
-     * @param defaultAtt defaultAtt
-     * @param defStyleRes defStyleRes
-     */
-    public CustomScrollView(Context context, AttributeSet attrs, int defaultAtt, int defStyleRes){
-        super(context, attrs, defaultAtt, defStyleRes);
         init(context);
     }
 
