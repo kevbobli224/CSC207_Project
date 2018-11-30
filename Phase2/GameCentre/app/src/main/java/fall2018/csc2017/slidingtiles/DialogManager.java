@@ -134,6 +134,11 @@ public class DialogManager implements PopupMenu.OnMenuItemClickListener{
         return true;
     }
 
+    /**
+     * Implements an click listener for choosing particular menu items
+     * @param item the id of items assigned in the res/menu/menu_sliding_difficulty
+     * @return returns the boolean whether a valid click had occurred.
+     */
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         int dialogPosition = item.getItemId();
