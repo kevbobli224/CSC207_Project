@@ -68,6 +68,8 @@
         <string name="d_toast_racecar">You must wait for your image to finish downloading!</string>
         <string name="d_toast_fix_url">Your url is not valid for board creation!</string>
         <string name="d_toast_wait_url">Cannot create board when image is downloading!</string>
+        <string name="d_toast_no_image">There are no images initialized!</string>
+
 
     <!-- LoadList's Strings-->
     <string name="ll_text_game">text game</string>
