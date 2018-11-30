@@ -32,11 +32,6 @@ public class ImageServiceIntent extends IntentService {
      */
     private String url;
     /**
-     * The dimensions of which images will be split proportionally
-     */
-    private int rows, columns;
-
-    /**
      * The required constructors for assigning worker's name.
      */
     public ImageServiceIntent() {
@@ -59,8 +54,6 @@ public class ImageServiceIntent extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         rr = intent.getParcelableExtra("receiver");
         url = intent.getStringExtra("url");
-        rows = intent.getIntExtra("rows", 0);
-        columns = intent.getIntExtra("columns", 0);
         try{
             InputStream is = (InputStream) new URL(url).getContent();
             Drawable d = Drawable.createFromStream(is, "drawable");
@@ -70,13 +63,10 @@ public class ImageServiceIntent extends IntentService {
             }
             else {
                 bundle.putParcelable("image", bitmap.getBitmap());
-                rr.send(3, bundle);
+                rr.send(1, bundle);
             }
-        } catch (MalformedURLException e) {
-            rr.send(2,null);
-            e.printStackTrace();
         } catch (IOException e) {
-            rr.send(3,null);
+            rr.send(2,null);
             e.printStackTrace();
         }
     }
