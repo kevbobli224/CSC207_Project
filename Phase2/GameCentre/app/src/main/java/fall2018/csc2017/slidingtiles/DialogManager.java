@@ -180,6 +180,8 @@ public class DialogManager implements PopupMenu.OnMenuItemClickListener{
                         makeCustomToastText(currentActivity.getString(R.string.d_toast_succ_load), currentActivity);
                     else if (resultReceiver.invalidImageLink())
                         makeCustomToastText(currentActivity.getString(R.string.d_toast_invalid_url), currentActivity);
+                    else if (!resultReceiver.resultReceiverInitialized())
+                        makeCustomToastText(currentActivity.getString(R.string.d_toast_no_image), currentActivity);
                     else
                         makeCustomToastText(currentActivity.getString(R.string.d_toast_racecar), currentActivity);
                 }
