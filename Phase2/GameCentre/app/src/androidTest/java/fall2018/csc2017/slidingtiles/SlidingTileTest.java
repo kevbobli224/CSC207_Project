@@ -15,7 +15,6 @@ import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.BoundedMatcher;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.espresso.util.HumanReadables;
 import android.support.test.espresso.util.TreeIterables;
 import android.support.test.filters.SmallTest;
@@ -52,21 +51,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withResourceName;
-import static android.support.test.espresso.matcher.ViewMatchers.withTagKey;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static fall2018.csc2017.slidingtiles.UtilityManager.ACCOUNTS_FILENAME;
 import static fall2018.csc2017.slidingtiles.UtilityManager.saveBoardManagerToFile;
 import static fall2018.csc2017.slidingtiles.UtilityManager.saveBoardsToAccounts;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isA;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 
@@ -77,7 +69,7 @@ public class SlidingTileTest {
     /**
      * BoardManager that sets up a nearly solved 4x4 board
      */
-    private BoardManager board4x4 = BoardSetup.setUp4x4NearSolved();
+    private BoardManager board4x4 = BoardSetupInstrumented.setUp4x4NearSolved();
     /**
      * The activity that each test cycle will store
      */
