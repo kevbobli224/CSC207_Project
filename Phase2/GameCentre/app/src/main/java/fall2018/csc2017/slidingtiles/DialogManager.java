@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static fall2018.csc2017.slidingtiles.UtilityManager.makeCustomToastText;
 import static fall2018.csc2017.slidingtiles.UtilityManager.newRandomBoard;
@@ -161,7 +163,7 @@ public class DialogManager implements PopupMenu.OnMenuItemClickListener{
             dialog.show();
 
             Button confirmButton = dialog.findViewById(R.id.button_confirm_difficulty);
-            Button loadImageButton = dialog.findViewById(R.id.button_loadImage);
+            final Button loadImageButton = dialog.findViewById(R.id.button_loadImage);
             final ImageView imagePreview = dialog.findViewById(R.id.iv_preview);
             final EditText rows = dialog.findViewById(R.id.text_row);
             final EditText columns = dialog.findViewById(R.id.text_column);
@@ -177,17 +179,39 @@ public class DialogManager implements PopupMenu.OnMenuItemClickListener{
                     Intent imageIntent = new Intent(v.getContext(), ImageServiceIntent.class);
                     imageIntent.putExtra("receiver", resultReceiver);
                     imageIntent.putExtra("url", url);
-                    imageIntent.putExtra("rows", 0);
-                    imageIntent.putExtra("columns", 0);
                     currentActivity.startService(imageIntent);
-                    if(resultReceiver.contentReceived())
-                        makeCustomToastText(currentActivity.getString(R.string.d_toast_succ_load), currentActivity);
-                    else if (resultReceiver.invalidImageLink())
-                        makeCustomToastText(currentActivity.getString(R.string.d_toast_invalid_url), currentActivity);
-                    else if (!resultReceiver.resultReceiverInitialized())
-                        makeCustomToastText(currentActivity.getString(R.string.d_toast_no_image), currentActivity);
-                    else
-                        makeCustomToastText(currentActivity.getString(R.string.d_toast_racecar), currentActivity);
+                    final Timer timer = new Timer();
+                    final Handler handler = new Handler();
+                    final Runnable waiter = new Runnable() {
+                        private int retries = 0;
+                        private boolean taskDone = false;
+                        @Override
+                        public void run() {
+                            if(resultReceiver.contentReceived()) {
+                                makeResultToasts(ReceiverStatus.RECEIVER_SUCCESS);
+                                taskDone = true;
+                            }
+                            else if(resultReceiver.invalidImageLink()) {
+                                makeResultToasts(ReceiverStatus.RECEIVER_INVALID);
+                                taskDone = true;
+                            }
+                            else if(!resultReceiver.resultReceiverInitialized())
+                                makeResultToasts(ReceiverStatus.RECEIVER_LOADING);
+                            else
+                                makeResultToasts(ReceiverStatus.RECEIVER_EMPTY);
+                            retries++;
+                            if(retries >= 5 || taskDone)
+                                timer.cancel();
+                        }
+                    };
+                    TimerTask task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            handler.postDelayed(waiter, 1000);
+                        }
+                    };
+                    // Set 0 to any milliseconds depending on average user's connection
+                    timer.schedule(task, 0, 1000);
                 }
             });
             confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -229,6 +253,30 @@ public class DialogManager implements PopupMenu.OnMenuItemClickListener{
                 }
             });
             return true;
+        }
+    }
+    private enum ReceiverStatus{
+        RECEIVER_SUCCESS,
+        RECEIVER_INVALID,
+        RECEIVER_EMPTY,
+        RECEIVER_LOADING
+    }
+
+    public void makeResultToasts(ReceiverStatus status)
+    {
+        switch (status){
+            case RECEIVER_EMPTY:
+                makeCustomToastText(currentActivity.getString(R.string.d_toast_no_image), currentActivity);
+                break;
+            case RECEIVER_INVALID:
+                makeCustomToastText(currentActivity.getString(R.string.d_toast_invalid_url), currentActivity);
+                break;
+            case RECEIVER_LOADING:
+                makeCustomToastText(currentActivity.getString(R.string.d_toast_racecar), currentActivity);
+                break;
+            case RECEIVER_SUCCESS:
+                makeCustomToastText(currentActivity.getString(R.string.d_toast_succ_load), currentActivity);
+                break;
         }
     }
 }
