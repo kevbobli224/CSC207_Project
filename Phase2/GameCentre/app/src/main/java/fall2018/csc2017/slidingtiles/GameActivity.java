@@ -12,6 +12,8 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -240,14 +242,18 @@ public class GameActivity extends AppCompatActivity implements Observer {
      *
      * @param fileName the name of the file
      */
-    private void loadFromFile(String fileName) throws Exception {
-        InputStream inputStream = this.openFileInput(fileName);
-        if (inputStream != null) {
-            ObjectInputStream input = new ObjectInputStream(inputStream);
-            boardManager = (BoardManager) input.readObject();
-            numRows = boardManager.getBoard().getNumRows();
-            numColumns = boardManager.getBoard().getNumColumns();
-            inputStream.close();
+    private void loadFromFile(String fileName) {
+        try{
+            InputStream inputStream = this.openFileInput(fileName);
+            if (inputStream != null) {
+                ObjectInputStream input = new ObjectInputStream(inputStream);
+                boardManager = (BoardManager) input.readObject();
+                numRows = boardManager.getBoard().getNumRows();
+                numColumns = boardManager.getBoard().getNumColumns();
+                inputStream.close();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
     /**
