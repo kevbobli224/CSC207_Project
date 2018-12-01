@@ -17,10 +17,23 @@ import static org.junit.Assert.assertNotEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class CustomAdapterTest {
+    /**
+     * An android-framework adapted Context
+     */
     private Context appContext;
+    /**
+     * List of Buttons to be initialized for the adapter
+     */
     private List<Button> buttonList;
+    /**
+     * Initial reference of a new button
+     */
     private Button initialButton;
 
+    /**
+     * Sets up the context by calling Robolectric's based context framework
+     * Initializes the button list with initial button created
+     */
     @Before
     public void setup(){
         appContext = RuntimeEnvironment.application;
@@ -28,6 +41,10 @@ public class CustomAdapterTest {
         initialButton = new Button(RuntimeEnvironment.application);
         buttonList.add(initialButton);
     }
+
+    /**
+     * Tests getCount() by asserting number of buttons in a list and it's new adapter
+     */
     @Test
     public void getCount() {
         CustomAdapter adapter = new CustomAdapter((ArrayList<Button>) buttonList, 5,5);
@@ -40,6 +57,9 @@ public class CustomAdapterTest {
         assertEquals(0, adapter.getCount());
     }
 
+    /**
+     * Tests for getItem() where 2 Buttons are compared by reference
+     */
     @Test
     public void getItem() {
         Button newButton = new Button(appContext);
@@ -49,6 +69,10 @@ public class CustomAdapterTest {
         assertNotEquals(newButton, adapter.getItem(0));
     }
 
+    /**
+     * Tests for getItemId() where it supposed to return a View component which would be
+     * auto-boxed for it's reference and compared with assertion
+     */
     @Test
     public void getItemId() {
         Button newButton = new Button(appContext);
@@ -58,6 +82,10 @@ public class CustomAdapterTest {
         assertNotEquals(buttonList.indexOf(newButton), adapter.getItemId(0));
     }
 
+    /**
+     * Gets the view where the second parameter specifies whether or not to use the specified view
+     * for the return view
+     */
     @Test
     public void getView() {
         Button newButton = new Button(appContext);
