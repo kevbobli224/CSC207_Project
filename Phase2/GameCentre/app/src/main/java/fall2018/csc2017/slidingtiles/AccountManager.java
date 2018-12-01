@@ -3,7 +3,6 @@ package fall2018.csc2017.slidingtiles;
 import android.app.Activity;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -184,7 +183,7 @@ public class AccountManager {
      * @param fileName        the name of the file
      * @param currentActivity the activity this manager is in for openFileOutput() accessing.
      */
-    void saveCredentials(String fileName, Activity currentActivity){
+    public void saveCredentials(String fileName, Activity currentActivity){
         try{
             ObjectOutputStream outputStream;
             if(currentActivity == null || currentActivity.getApplicationContext() == null) {
@@ -194,7 +193,7 @@ public class AccountManager {
             }
             outputStream.writeObject(accountsList);
             outputStream.close();
-        } catch (IOException e){
+        } catch (Exception e){
             makeToastMessage(ToastConstant.TOAST_ERROR_SAVE, currentActivity);
         }
     }

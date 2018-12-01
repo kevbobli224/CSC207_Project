@@ -4,18 +4,31 @@ import android.app.Activity;
 import android.content.Intent;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
 import static fall2018.csc2017.slidingtiles.UtilityManager.ACCOUNTS_FILENAME;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class AccountManagerTest {
     private List<Account> testAccountList = new ArrayList<>();
     private Account firstAccount = new Account("123","123") ;
@@ -86,11 +99,20 @@ public class AccountManagerTest {
                 .equals(new Account("validusername", "12345")));
     }
 
+    @Rule
+    public ExpectedException e = ExpectedException.none();
+
     @Test
     public void saveCredentials() {
         Activity dummyActivity = new Activity();
         dummyActivity.setIntent(new Intent(dummyActivity, LaunchCentre.class));
-        am.saveCredentials(ACCOUNTS_FILENAME, dummyActivity);
-        am.saveCredentials("bogus", null);
+        am.saveCredentials("bogus", dummyActivity);
+        am.saveCredentials(null, null);
+        am.saveCredentials(ACCOUNTS_FILENAME, null);
+        e.expect(Exception.class);
+        AccountManager ma = mock(AccountManager.class);
+        doThrow(Exception.class).when(ma).saveCredentials((String) isNull(), (Activity) isNull());
+        ma.saveCredentials(null, null);
+        verify(ma, times(1)).saveCredentials(null,null);
     }
 }
