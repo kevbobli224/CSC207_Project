@@ -3,7 +3,7 @@ package fall2018.csc2017.slidingtiles;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardSetup {
+public class BoardSetupInstrumented {
     /**
      * Setup a nearly solved 4x4 board swapped by 1 move
      * @return BoardManager with nearly solved board
