@@ -129,7 +129,8 @@ public class ImageResultReceiver extends ResultReceiver {
             switch(resultCode){
                 case 1:
                     Bitmap bm1 = resultData.getParcelable("image");
-                    imageView.setImageBitmap(bm1);
+                    if(imageView != null)
+                        imageView.setImageBitmap(bm1);
                     unprocessedBitmap = bm1;
                     recIm = true;
                     recImArr = false;
