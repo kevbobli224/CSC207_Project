@@ -24,7 +24,7 @@
             tools:ignore="InnerclassSeparator" />
         <activity android:name=".ObstacleDodger.ObGameActivity"
             tools:ignore="InnerclassSeparator" />
-        <activity android:name=".GeneralScoreboard"></activity>
+        <activity android:name=".GeneralScoreboard" />
 
         <service android:name=".ImageServiceIntent" />
     </application>
