@@ -15,6 +15,9 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+/**
+ *
+ */
 @RunWith(AndroidJUnit4.class)
 public class CustomAdapterTest {
     /**

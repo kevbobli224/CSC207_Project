@@ -39,4 +39,10 @@ public class BoardSetup {
         return bm;
     }
 
+    public static BoardManager setUp4x4NearSolved(){
+        BoardManager bm = setUp4x4Solved();
+        bm.touchMove(14);
+        return bm;
+    }
+
 }
